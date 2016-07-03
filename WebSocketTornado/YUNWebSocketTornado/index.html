@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    <script type="text/javascript">
+        function WebSocketTest() {
+			var accion=document.getElementById("accion").value;
+			var clie=1;
+			
+			//alert(mess);
+            var ws = new WebSocket("ws://localhost:8888/ws?Id="+clie+"&accion="+accion+"&mess=&continue=Yes");
+			if (ws != null && ws.readyState == WebSocket.OPEN) {
+				ws.send("Los datos desde el cliente al servidor !");
+			}
+                ws.onopen = function() {
+                    ws.send("conexión de apertura !");
+                };
+                ws.onmessage = function (evt) { 
+                    var received_msg = evt.data;
+                    //alert("Mensaje recibido... " + received_msg);
+                    document.getElementById("mensajes").innerHTML +=received_msg +'<br>';
+                    alert(received_msg);
+                    if(received_msg=="ON"){
+						document.getElementById("accion").value="OFF";
+					}
+					if(received_msg=="OFF"){
+						document.getElementById("accion").value="ON";
+					}
+                };
+                ws.onclose = function() { 
+                    alert("La conexión está cerrada ...");
+                };
+        }
+        </script>
+    </head>
+    <body>
+        <input type="button" onclick="javascript:WebSocketTest()" name="accion" id="accion" value="ON">
+		
+        <br>
+        <br>
+        <p>Lista de mensajes</p><br>
+        <div id="mensajes"></div>
+    </body>
+</html>
+
